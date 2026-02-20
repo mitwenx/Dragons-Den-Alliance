@@ -1,16 +1,21 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// CHANGED: Import HashRouter instead of BrowserRouter
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Apply from './pages/Apply';
 
-// A simple dummy component for OurClans just to complete the routing
+// Dummy component for Clans page
 const OurClans = () => (
-  <main className="container"><h1 style={{color: 'var(--md-primary)'}}>Our Alliance Clans</h1><p>List of clans will appear here.</p></main>
+  <main className="container">
+    <h1 style={{color: 'var(--md-primary)'}}>Our Alliance Clans</h1>
+    <p>List of clans will appear here.</p>
+  </main>
 );
 
 export default function App() {
   return (
+    // CHANGED: Using HashRouter
     <Router>
       <Navbar />
       <Routes>
