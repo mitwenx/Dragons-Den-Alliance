@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// Replace with your actual Cloudflare Worker URL
 const API_URL = "https://your-worker-name.your-username.workers.dev"; 
 
 export default function Home() {
-  const = useState({ announcements: [], events:[] });
-  const = useState(46);
+  // FIXED LINE BELOW: Added [data, setData]
+  const [data, setData] = useState({ announcements: [], events:[] });
+  // FIXED LINE BELOW: Added [onlineCount, setOnlineCount]
+  const [onlineCount, setOnlineCount] = useState(46);
 
   useEffect(() => {
     fetch(`${API_URL}/api/home-data`)
@@ -14,7 +15,6 @@ export default function Home() {
       .then(d => setData(d))
       .catch(e => console.error("Error fetching data:", e));
 
-    // Simulate live discord count updating
     const interval = setInterval(() => {
       setOnlineCount(prev => prev + (Math.random() > 0.5 ? 1 : -1));
     }, 8000);
