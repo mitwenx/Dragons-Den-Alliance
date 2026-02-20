@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 
+// Replace with your actual Cloudflare Worker URL later
 const API_URL = "https://your-worker-name.your-username.workers.dev";
 
 export default function Apply() {
-  const = useState({ playerName: '', playerTag: '', desiredClan: 'Loyola' });
-  const = useState(null);
+  // FIXED LINE BELOW: Added [formData, setFormData]
+  const [formData, setFormData] = useState({ playerName: '', playerTag: '', desiredClan: 'Loyola' });
+  // FIXED LINE BELOW: Added [status, setStatus]
+  const [status, setStatus] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
