@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Navbar() {
-  const = useState(false);
+  // FIXED LINE BELOW: Added [isOpen, setIsOpen]
+  const [isOpen, setIsOpen] = useState(false);
 
   const navStyle = {
     background: 'rgba(26, 29, 36, 0.9)', backdropFilter: 'blur(10px)',
