@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]  # or "master" check your default branch name
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -20,10 +20,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          # cache: 'npm'  <-- WE REMOVED THIS LINE to fix the error
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install  # <-- CHANGED from 'npm ci' to 'npm install'
 
       - name: Build
         run: npm run build
