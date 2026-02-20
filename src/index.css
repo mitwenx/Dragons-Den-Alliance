@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0');
+
+:root {
+  --md-bg: #0f1115; 
+  --md-surface: #1a1d24; 
+  --md-surface-variant: #2b2f38; 
+  --md-primary: #f5b83d; 
+  --md-on-primary: #3d2a00; 
+  --md-secondary: #5c88da; 
+  --md-on-secondary: #ffffff;
+  --md-text: #e2e8f0;
+  --md-text-muted: #94a3b8;
+  --md-radius: 16px;
+  --md-radius-full: 100px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+body { background-color: var(--md-bg); color: var(--md-text); line-height: 1.6; overflow-x: hidden; }
+
+/* Buttons */
+.btn {
+  padding: 0.75rem 1.5rem; border-radius: var(--md-radius-full);
+  font-weight: 600; text-decoration: none; display: inline-flex;
+  align-items: center; gap: 8px; transition: all 0.3s ease;
+  cursor: pointer; border: none; font-size: 1rem;
+}
+.btn-primary { background-color: var(--md-primary); color: var(--md-on-primary); }
+.btn-primary:hover { background-color: #ffd270; box-shadow: 0 4px 12px rgba(245, 184, 61, 0.3); }
+.btn-discord { background-color: var(--md-secondary); color: var(--md-on-secondary); }
+.btn-discord:hover { background-color: #739df0; box-shadow: 0 4px 12px rgba(92, 136, 218, 0.3); }
+.btn-outline { border: 1px solid var(--md-surface-variant); color: var(--md-primary); background: transparent; }
+.btn-outline:hover { background-color: rgba(245, 184, 61, 0.1); }
+
+/* Layout & Cards */
+.container { max-width: 1200px; margin: 100px auto 0; padding: 2rem; }
+.card {
+  background-color: var(--md-surface); border-radius: var(--md-radius);
+  padding: 1.5rem; border: 1px solid var(--md-surface-variant);
+  transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-5px); }
+
+/* Forms */
+.form-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.form-group label { font-weight: 600; color: var(--md-text-muted); }
+.form-control {
+  background: var(--md-bg); border: 1px solid var(--md-surface-variant);
+  color: white; padding: 1rem; border-radius: 8px; font-size: 1rem;
+}
+.form-control:focus { outline: none; border-color: var(--md-primary); }
