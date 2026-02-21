@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // Replace with your actual Cloudflare Worker URL later
-const API_URL = "https://your-worker-name.your-username.workers.dev";
+const API_URL = "https://web.xethumbnail.workers.dev";
 
 export default function Apply() {
   // FIXED LINE BELOW: Added [formData, setFormData]
