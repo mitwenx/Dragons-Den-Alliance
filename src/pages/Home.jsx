@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const API_URL = "https://your-worker-name.your-username.workers.dev"; 
+const API_URL = "https://web.xethumbnail.workers.dev"; 
 
 export default function Home() {
   // FIXED LINE BELOW: Added [data, setData]
