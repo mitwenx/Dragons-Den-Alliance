@@ -1,28 +1,45 @@
 import React, { useEffect, useState } from 'react';
 
-// Replace with your actual Cloudflare Worker URL
 const API_URL = "https://web.xethumbnail.workers.dev"; 
 
+const CATEGORIES = {
+  "Competitive": ['#JGGYC8QV', '#2QV0Q029L', '#GP2Y82UQ', '#GJQJU2QJ', '#2LJYCYYY9', '#2QGVCCPJC', '#2GC8RQ0PJ', '#JGYPQPG8', '#2GL02LGL0', '#2GV92CC2L'],
+  "Casual": ['#2JRRYUQCL', '#PGVCC2GJ', '#2RRCR0P2J'],
+  "Feeder": ['#2Y98L0VV0', '#2JGCUCQQQ'],
+  "Alliance Partners": ['#2QLL02GPV', '#2RGUGV988', '#2RJR99R92']
+};
+
 export default function Clans() {
-  const [clan, setClan] = useState(null);
+  const [clans, setClans] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedClan, setSelectedClan] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/clan-stats`)
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch clan data");
-        return res.json();
-      })
+    fetch(`${API_URL}/api/clans-data`)
+      .then(res => res.json())
       .then(data => {
-        // If the API returns an error object, throw it
         if(data.error) throw new Error(data.error);
-        setClan(data);
+        
+        // Group clans by category
+        const grouped = { "Competitive": [], "Casual": [], "Feeder": [], "Alliance Partners": [] };
+        data.forEach(clan => {
+          let placed = false;
+          for (const [category, tags] of Object.entries(CATEGORIES)) {
+            if (tags.includes(clan.tag)) {
+              grouped[category].push(clan);
+              placed = true;
+              break;
+            }
+          }
+          if (!placed) grouped["Alliance Partners"].push(clan);
+        });
+
+        setClans(grouped);
         setLoading(false);
       })
       .catch(err => {
-        console.error(err);
-        setError("Could not load clan data. Check API Key or Proxy settings.");
+        setError("Could not load clan data. Please try again later.");
         setLoading(false);
       });
   }, []);
@@ -30,7 +47,7 @@ export default function Clans() {
   if (loading) return (
     <div className="container" style={{textAlign: 'center', color: 'var(--md-text-muted)', marginTop: '20vh'}}>
       <span className="material-symbols-rounded" style={{animation: 'spin 1s infinite linear', fontSize: '3rem'}}>refresh</span>
-      <p style={{marginTop: '1rem'}}>Contacting Supercell...</p>
+      <p style={{marginTop: '1rem'}}>Loading latest clan data...</p>
     </div>
   );
 
@@ -43,82 +60,75 @@ export default function Clans() {
 
   return (
     <main className="container">
-      {/* Clan Hero Section */}
-      <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem', marginBottom: '3rem', border: '1px solid var(--md-primary)' }}>
-        {clan.badgeUrls && (
-            <img src={clan.badgeUrls.medium} alt="Clan Badge" style={{ width: '120px', marginBottom: '1rem', filter: 'drop-shadow(0 0 10px rgba(245, 184, 61, 0.4))' }} />
-        )}
-        <h1 style={{ fontSize: '3rem', color: 'var(--md-primary)', lineHeight: '1.1' }}>{clan.name}</h1>
-        <p style={{ color: 'var(--md-text-muted)', fontSize: '1.3rem', marginBottom: '1rem', fontWeight: 'bold' }}>{clan.tag}</p>
-        <p style={{ maxWidth: '600px', margin: '0 auto 2rem', fontStyle: 'italic', color: '#cbd5e1' }}>"{clan.description}"</p>
-        
-        <a href={`https://link.clashofclans.com/en?action=OpenClanProfile&tag=${clan.tag.replace('#', '')}`} className="btn btn-primary" target="_blank" rel="noreferrer">
-          <span className="material-symbols-rounded">swords</span> Open in Game
-        </a>
+      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <h1 style={{ fontSize: '3rem', color: 'var(--md-primary)' }}>Our Alliance Clans</h1>
+        <p style={{ color: 'var(--md-text-muted)' }}>Find the perfect fit based on your playstyle.</p>
       </div>
 
-      {/* Stats Grid */}
-      <h2 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-         <span className="material-symbols-rounded" style={{color: 'var(--md-secondary)'}}>analytics</span> Clan Statistics
-      </h2>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
-        
-        {/* War Wins */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ color: 'var(--md-text-muted)', fontSize: '0.9rem' }}>War Wins</span>
-            <span className="material-symbols-rounded" style={{ color: '#22c55e' }}>trophy</span>
+      {Object.entries(clans).map(([category, clanList]) => (
+        clanList.length > 0 && (
+          <div key={category} style={{ marginBottom: '4rem' }}>
+            <h2 style={{ marginBottom: '1.5rem', borderBottom: '1px solid var(--md-surface-variant)', paddingBottom: '0.5rem', color: 'white' }}>
+              {category} Clans
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+              {clanList.map(clan => (
+                <div key={clan.tag} className="card" onClick={() => setSelectedClan(clan)} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <img src={clan.badgeUrls.small} alt="Badge" style={{ width: '60px' }} />
+                  <div>
+                    <h3 style={{ fontSize: '1.2rem', marginBottom: '4px' }}>{clan.name}</h3>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--md-text-muted)' }}>
+                      <span className="material-symbols-rounded" style={{ fontSize: '14px', verticalAlign: 'middle' }}>groups</span> {clan.members}/50
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{clan.warWins}</div>
-        </div>
+        )
+      ))}
 
-        {/* Win Streak */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ color: 'var(--md-text-muted)', fontSize: '0.9rem' }}>Win Streak</span>
-            <span className="material-symbols-rounded" style={{ color: '#f59e0b' }}>local_fire_department</span>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{clan.warWinStreak}</div>
-        </div>
+      {/* MODAL FOR CLAN DETAILS */}
+      {selectedClan && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }} onClick={() => setSelectedClan(null)}>
+          <div className="card" onClick={e => e.stopPropagation()} style={{ maxWidth: '500px', width: '100%', position: 'relative' }}>
+            <button onClick={() => setSelectedClan(null)} style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}>
+              <span className="material-symbols-rounded">close</span>
+            </button>
+            
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+              <img src={selectedClan.badgeUrls.medium} alt="Badge" style={{ width: '100px', filter: 'drop-shadow(0 0 10px rgba(245, 184, 61, 0.4))' }} />
+              <h2 style={{ color: 'var(--md-primary)', marginTop: '10px' }}>{selectedClan.name}</h2>
+              <p style={{ color: 'var(--md-text-muted)' }}>{selectedClan.tag}</p>
+            </div>
 
-        {/* Members */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ color: 'var(--md-text-muted)', fontSize: '0.9rem' }}>Members</span>
-            <span className="material-symbols-rounded" style={{ color: 'var(--md-secondary)' }}>groups</span>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{clan.members}/50</div>
-        </div>
+            <p style={{ fontStyle: 'italic', marginBottom: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#cbd5e1' }}>"{selectedClan.description}"</p>
 
-        {/* Clan Level */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ color: 'var(--md-text-muted)', fontSize: '0.9rem' }}>Clan Level</span>
-            <span className="material-symbols-rounded" style={{ color: 'var(--md-primary)' }}>stars</span>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{clan.clanLevel}</div>
-        </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+              <div style={{ background: 'var(--md-bg)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--md-text-muted)' }}>Clan Level</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{selectedClan.clanLevel}</div>
+              </div>
+              <div style={{ background: 'var(--md-bg)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--md-text-muted)' }}>War Wins</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{selectedClan.warWins}</div>
+              </div>
+              <div style={{ background: 'var(--md-bg)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--md-text-muted)' }}>Req. Trophies</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{selectedClan.requiredTrophies}</div>
+              </div>
+              <div style={{ background: 'var(--md-bg)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--md-text-muted)' }}>Win Streak</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{selectedClan.warWinStreak}</div>
+              </div>
+            </div>
 
-        {/* Location */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ color: 'var(--md-text-muted)', fontSize: '0.9rem' }}>Location</span>
-            <span className="material-symbols-rounded" style={{ color: '#94a3b8' }}>public</span>
+            <a href={`https://link.clashofclans.com/en?action=OpenClanProfile&tag=${selectedClan.tag.replace('#', '')}`} className="btn btn-primary" target="_blank" rel="noreferrer" style={{ width: '100%', justifyContent: 'center' }}>
+              Open in Game
+            </a>
           </div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 600, marginTop: '10px' }}>{clan.location?.name || 'International'}</div>
         </div>
-
-        {/* Required Trophies */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ color: 'var(--md-text-muted)', fontSize: '0.9rem' }}>Req. Trophies</span>
-            <span className="material-symbols-rounded" style={{ color: '#eab308' }}>military_tech</span>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{clan.requiredTrophies}</div>
-        </div>
-        
-      </div>
+      )}
     </main>
   );
 }
