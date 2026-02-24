@@ -33,7 +33,11 @@ body { background-color: var(--md-bg); color: var(--md-text); line-height: 1.6; 
 .btn-outline:hover { background-color: rgba(245, 184, 61, 0.1); }
 
 /* Layout & Cards */
-.container { max-width: 1200px; margin: 100px auto 0; padding: 2rem; }
+.container { 
+  max-width: 1200px; 
+  margin: 0 auto; 
+  padding: 2rem; 
+}
 .card {
   background-color: var(--md-surface); border-radius: var(--md-radius);
   padding: 1.5rem; border: 1px solid var(--md-surface-variant);
