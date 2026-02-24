@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 const API_URL = "https://web.xethumbnail.workers.dev";
 
-// Extracted Clan List for Dropdowns
 const CLAN_OPTIONS = [
   "LINGGA DJATI", "Moskow Two", "SPECIALIST", "Loyola", "Monke", "GUJJU GANG", 
   "We are Sam", "Rock starz!!", "SHADOW SAINTS", "Old Thugs", "sentinels", 
@@ -43,7 +42,7 @@ export default function Apply() {
 
   if (status === 'success') {
     return (
-      <main className="container" style={{ maxWidth: '600px', textAlign: 'center', marginTop: '10vh' }}>
+      <main className="container" style={{ maxWidth: '600px', width: '100%', textAlign: 'center', marginTop: '10vh' }}>
         <span className="material-symbols-rounded" style={{ fontSize: '5rem', color: '#22c55e', marginBottom: '1rem' }}>check_circle</span>
         <h1 style={{ marginBottom: '1rem' }}>Application Submitted!</h1>
         <p style={{ color: 'var(--md-text-muted)', marginBottom: '2rem' }}>
@@ -57,7 +56,7 @@ export default function Apply() {
   }
 
   return (
-    <main className="container" style={{ maxWidth: '600px' }}>
+    <main className="container" style={{ maxWidth: '600px', width: '100%', margin: '0 auto' }}>
       <h1 style={{ marginBottom: '0.5rem', color: 'var(--md-primary)' }}>Apply to Dragon's Den</h1>
       
       <div style={{ background: 'rgba(92, 136, 218, 0.1)', border: '1px solid var(--md-secondary)', padding: '1rem', borderRadius: '8px', marginBottom: '2rem' }}>
@@ -73,19 +72,20 @@ export default function Apply() {
           <small style={{ color: 'var(--md-text-muted)', fontSize: '0.8rem' }}>Discord is mandatory for all members.</small>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          <div className="form-group">
+        {/* MOBILE RESPONSIVE FIX: Auto-fit grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div className="form-group" style={{ marginBottom: 0 }}>
             <label>In-Game Name <span style={{color: '#ef4444'}}>*</span></label>
             <input required type="text" className="form-control" value={formData.playerName} onChange={e => setFormData({...formData, playerName: e.target.value})} placeholder="ClashKing" />
           </div>
           
-          <div className="form-group">
+          <div className="form-group" style={{ marginBottom: 0 }}>
             <label>Player Tag (#) <span style={{color: '#ef4444'}}>*</span></label>
             <input required type="text" className="form-control" value={formData.playerTag} onChange={e => setFormData({...formData, playerTag: e.target.value})} placeholder="#YQU99V8" />
           </div>
         </div>
 
-        <label style={{ fontWeight: 600, color: 'var(--md-text-muted)', display: 'block', marginBottom: '0.5rem', marginTop: '1rem' }}>Your Preferred Clans (Choose up to 3)</label>
+        <label style={{ fontWeight: 600, color: 'var(--md-text-muted)', display: 'block', marginBottom: '0.5rem', marginTop: '1.5rem' }}>Your Preferred Clans (Choose up to 3)</label>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
           {[0, 1, 2].map(index => (
             <select key={index} className="form-control" value={formData.choices[index]} onChange={e => handleChoiceChange(index, e.target.value)} required={index === 0}>
